@@ -1,56 +1,49 @@
 import logo from './logo.svg';
 import './App.css';
+import axios from "axios"
 import {useEffect, useState} from "react";
 
 function App() {
+    // "https://jsonplaceholder.typicode.com/users"
 
-    const [second, setSecond] = useState(0);
-    const [minute, setMinute] = useState(0);
-    const [isRunning, setIsRunning] = useState(false);
+    const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        let timer
-        if (isRunning) {
-        timer = setInterval(() => {
-            setSecond((prevSecond) => {
-                if (prevSecond === 59) {
-                    setMinute(prevMinute => prevMinute + 0.5);
-                        return 0;
-                    }
-                    else {
-                        return prevSecond + 1;
-                    }
-                })
-            }, 1000)
-        }
-
-        return () => clearInterval(timer)
-    })
-
-    const stop = () => {
-        setIsRunning(false);
+    function getUsers() {
+        axios.get("https://jsonplaceholder.typicode.com/users")
+            .then((response) => {
+                setUsers(response.data);
+                console.log(response.data[0].name);
+                // console.log(users[0].name);
+            })
     }
 
-    const start = () => {
-        setIsRunning(true);
-        setSecond(0);
-        setMinute(0);
-    }
-
-    const reset = () => {
-        setIsRunning(false);
-        setSecond(0);
-        setMinute(0);
+    function DeleteUser(id) {
+        const newUsers = users.filter(user => user.id !== id)
+        setUsers(newUsers);
     }
 
     return (
         <div className="App" >
-            <h1>{minute} : {second}</h1>
-            <button onClick={stop}>Stop</button>
-            <button onClick={start}>Start</button>
-            <button onClick={reset}>Reset</button>
+            <button onClick={getUsers}>get Data</button>
+            <ShowUsers users={users} DeleteUser={DeleteUser}/>
         </div>
     );
 }
+
+function ShowUsers(props) {
+    return (
+        <div>
+            {props.users.map((user) => {
+                return (
+                    <div key={`div-${user.id}`}>
+                        {user.name && <h2 key={`name-${user.id}`}>{user.id} _ {user.name}</h2>}
+                        {user.name && <button key={`btn-${user.id}`} onClick={() => props.DeleteUser(user.id)}>Delete {user.name}</button>}
+                    </div>
+                )
+            })}
+        </div>
+    )
+}
+
 
 export default App;
