@@ -1,49 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
-import axios from "axios"
-import {useEffect, useState} from "react";
+import {Cat} from './pages/cat'
+import {Home} from './pages/home'
+import {Dog} from './pages/dog'
+import {Horse} from './pages/horse'
+import {Error} from './pages/Error'
+import {Route, Routes, Link, BrowserRouter as Router} from 'react-router-dom'
+
+
 
 function App() {
-    // "https://jsonplaceholder.typicode.com/users"
-
-    const [users, setUsers] = useState([]);
-
-    function getUsers() {
-        axios.get("https://jsonplaceholder.typicode.com/users")
-            .then((response) => {
-                setUsers(response.data);
-                console.log(response.data[0].name);
-                // console.log(users[0].name);
-            })
-    }
-
-    function DeleteUser(id) {
-        const newUsers = users.filter(user => user.id !== id)
-        setUsers(newUsers);
-    }
 
     return (
         <div className="App" >
-            <button onClick={getUsers}>get Data</button>
-            <ShowUsers users={users} DeleteUser={DeleteUser}/>
+            <Router>
+                <div style={{backgroundColor:'#f0c444' , fontSize: "40px", padding : "9px"}}>
+                    <Link to="/">Home</Link><br/>
+                    <Link to="/cat">Cat</Link><br/>
+                    <Link to="/dog">Dog</Link><br/>
+                    <Link to="/horse">Horse</Link>
+                </div>
+                <Routes>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/cat" element={<Cat/>}/>
+                    <Route path="/dog" element={<Dog/>}/>
+                    <Route path="/horse" element={<Horse/>}/>
+                    <Route path="*" element={<Error/>}/>
+                </Routes>
+            </Router>
         </div>
     );
 }
 
-function ShowUsers(props) {
-    return (
-        <div>
-            {props.users.map((user) => {
-                return (
-                    <div key={`div-${user.id}`}>
-                        {user.name && <h2 key={`name-${user.id}`}>{user.id} _ {user.name}</h2>}
-                        {user.name && <button key={`btn-${user.id}`} onClick={() => props.DeleteUser(user.id)}>Delete {user.name}</button>}
-                    </div>
-                )
-            })}
-        </div>
-    )
-}
+
 
 
 export default App;
