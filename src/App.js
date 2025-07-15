@@ -1,12 +1,12 @@
 import './App.css';
-import {Form} from "./form/Form";
+import {RegisterForm} from "./form/RegisterForm";
 
 function App() {
 
 
     return (
         <div className="App"  style={{width: '100%', height: '100%'}}>
-            <Form/>
+            <RegisterForm />
         </div>
     );
 }
